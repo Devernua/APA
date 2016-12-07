@@ -18,7 +18,7 @@ void generate(uint256_t digit)
 
 void assign(uint16_t * a, const uint16_t * b, size_t size = SIZE)
 {
-    for (size_t i = 0; i < SIZE && i < size; i++) {
+    for (size_t i = 0; i < size; i++) {
         a[i] = b[i];
     }
 }
@@ -161,6 +161,30 @@ uint16_t mult_word(const uint256_t a, const uint16_t b, uint16_t* const c)
     return d;
 }
 
+uint16_t mult_word2(const uint512_t a, const uint16_t b, uint512_t c)
+{
+    //Результат элементарного умножения слов
+    uint32_t T;
+
+    //Слово переноса разряда при умножении
+    uint16_t d = 0;
+
+    for (size_t i = 0; i < SIZE*2; i++)
+    {
+        //Элементарное умножение слов с переносом
+        T = (uint32_t)a[i] * (uint32_t)b + (uint32_t)d;
+
+        //Сохранение полученного при умножении слова
+        c[i] = LOWORD(T);
+
+        //Перенос разряда
+        d = HIWORD(T);
+    }
+
+    //Возврат слова переноса
+    return d;
+}
+
 //Подпрограмма деления длинного беззнакового числа на слово
 // a - делимое число длинной size слов
 // b - делитель длинной в 1 слово
@@ -204,18 +228,52 @@ uint16_t div_word(const uint256_t a, const uint16_t b, uint256_t c, uint16_t* co
     return LOWORD(T);
 }
 
+uint16_t div_word2(const uint512_t a, const uint16_t b, uint256_t c, uint16_t* const r)
+{
+    //Элементарное делимое
+    uint32_t T = 0;
+
+    if (b == 0)
+    {
+        //Деление на ноль
+        return UINT16_MAX;
+    }
+
+    for (size_t i = SIZE*2; i > 0; i--)
+    {
+        //Старшее слово - остаток предыдущего элементарного деления
+        T <<= sizeof(uint16_t) * 8;
+
+        //Младшее слово - очередное слово делимого числа
+        T |= a[i - 1];
+
+        //Сохранение результата элементарного деления
+        c[i - 1] = LOWORD(T / (uint32_t)b);
+
+        //Сохраниние остатка
+        T %= b;
+    }
+
+    if (r != NULL)
+    {
+        //Сохраниние остатка в переменную r, если она передана
+        *r = LOWORD(T);
+    }
+
+    //Возврат остатка
+    return LOWORD(T);
+}
 
 // U - делимое
 // V - делитель
 // Q - частное
 // R - остаток
-
-void div(const uint256_t U, const uint256_t V, uint256_t Q, uint256_t R)
+void div(const uint512_t U, const uint256_t V, uint256_t Q, uint256_t R)
 {
     uint16_t q, buf1, buf2;                /* для промежуточного хранения */
-    uint16_t U2[SIZE + 1] = {0},   /* для нормализованного U */
-            V2[SIZE + 1] = {0},   /* для нормализованного V */
-            R2[SIZE + 1] = {0};	/* для промежуточного умножения */
+    uint16_t U2[33] = {0};   /* для нормализованного U */
+    uint16_t V2[SIZE + 1] = {0},   /* для нормализованного V */
+             R2[SIZE + 1] = {0};	/* для промежуточного умножения */
     uint32_t inter;                     /* для промежуточных операций */
     uintmax_t i, j, k;                          /* индексные переменные */
     uint16_t d;                            /* нормализующий множитель */
@@ -228,7 +286,7 @@ void div(const uint256_t U, const uint256_t V, uint256_t Q, uint256_t R)
     if (sizeV == 0) return;                  /* исключение "Деление на ноль" (просто уходим) */
 
     // ReSharper disable once CppPossiblyErroneousEmptyStatements
-    for (k = SIZE; (k > 0)&(!U[k - 1]); k--);  /* анализ делимого, отсекаем старшие незначащие нули */
+    for (k = SIZE*2; (k > 0)&(!U[k - 1]); k--);  /* анализ делимого, отсекаем старшие незначащие нули */
     size_t sizeU = k;                          /* новый размер делимого */
 
     if (sizeV > sizeU)                     /* если делитель больше делимого, то */
@@ -238,7 +296,7 @@ void div(const uint256_t U, const uint256_t V, uint256_t Q, uint256_t R)
     }
     if (sizeV == 1)                   /* если делитель - 1 слово, то */
     {
-        div_word(U, V[0], Q, R);     /* применяем упрощенный алгоритм */
+        div_word2(U, V[0], Q, R);     /* применяем упрощенный алгоритм */
         return;                        /* уходим */
     }
 
@@ -247,7 +305,7 @@ void div(const uint256_t U, const uint256_t V, uint256_t Q, uint256_t R)
     if (d != 1)                            /* если d не 1, */
     {
         V2[sizeV] = mult_word(V, d, V2);   /* умножаем V на d */
-        U2[sizeU] = mult_word(U, d, U2);   /* умножаем U на d */
+        U2[sizeU] = mult_word2(U, d, U2);   /* умножаем U на d */
     }
     else
     {                                   /* если d == 1, */
@@ -309,10 +367,27 @@ void div(const uint256_t U, const uint256_t V, uint256_t Q, uint256_t R)
     }
 }
 
-
 void multMod(const uint256_t a, const uint256_t b, const uint256_t n, uint256_t c)
 {
-    uint256_t e = {0}, tmp = {0};
+    uint512_t e = {0};
+    uint256_t tmp = {0};
     mul(a,b,e);
     div(e,n,tmp,c);
+}
+
+void pow(const uint256_t a, const uint256_t b, const uint256_t n, uint256_t c)
+{
+    size_t i;
+    c[0] = 1;
+
+    for(i = 1; i < SIZE; i++)
+        c[i] = 0;
+
+    for(i = 16 * SIZE-1; i > 0; i--)
+    {
+        printf("%d\n", i);
+        multMod(c,c,n,c);
+        if((b[i/16]>>(i%16))&1)
+            multMod(c,a,n,c);
+    }
 }

@@ -34,6 +34,7 @@ void mul(const uint256_t a, const uint256_t b, uint512_t c);
 //  Возвращаемые значения:
 //     слово переноса
 uint16_t mult_word(const uint256_t a, const uint16_t b, uint16_t* const c);
+uint16_t mult_word2(const uint512_t a, const uint16_t b, uint512_t c);
 
 
 //Подпрограмма деления длинного беззнакового числа на слово
@@ -45,12 +46,17 @@ uint16_t mult_word(const uint256_t a, const uint16_t b, uint16_t* const c);
 //     остаток от деления
 uint16_t div_word(const uint256_t a, const uint16_t b, uint256_t c, uint16_t* const r);
 
+uint16_t div_word2(const uint512_t a, const uint16_t b, uint256_t c, uint16_t* const r);
+
 // U - делимое
 // V - делитель
 // Q - частное
 // R - остаток
-void div(const uint256_t U, const uint256_t V, uint256_t Q, uint256_t R);
+
+void div(const uint512_t U, const uint256_t V, uint256_t Q, uint256_t R);
 
 void multMod(const uint256_t a, const uint256_t b, const uint256_t n, uint256_t c);
+
+void pow(const uint256_t a, const uint256_t b, const uint256_t n, uint256_t c);
 
 #endif //APA_UTILS_H

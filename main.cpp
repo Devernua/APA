@@ -9,6 +9,7 @@ int main() {
     uint256_t a={0},b = {0},c = {0}, d={0};
     generate(a);
     generate(b);
+    generate(c);
     //print(a);
     //print(b);
     //add(a,b,c);
@@ -18,8 +19,7 @@ int main() {
 //    if(cmp(c,b) > 0) printf("TRUE\n");
 
    // print(d);
-    b[15]=0;
-    div(a,b,c,d);
+    pow(a,b,c,d);
     printf("\n");
     print(a);
     print(b);

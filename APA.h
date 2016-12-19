@@ -33,4 +33,8 @@ void Div(const uint512_t U, const uint256_t V, uint256_t Q, uint256_t R);
 
 void MulMod(const uint256_t a, const uint256_t b, const uint256_t n, uint256_t c);
 void Pow(const uint256_t a, const uint256_t b, const uint256_t n, uint256_t c);
+
+void RSA_encrypt(const uint256_t M, const uint256_t e, const uint256_t n, uint256_t C);
+void RSA_decrypt(const uint256_t C, const uint256_t d, const uint256_t n, uint256_t M);
+
 #endif //APA_APA_H

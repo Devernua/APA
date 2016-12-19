@@ -8,42 +8,40 @@ int main() {
 
     uint256_t a={0},b = {0},c = {0}, d={0}, r ={0};
     uint512_t m={0};
-    generate_uint256(a);
-    generate_uint256(b);
-    generate_uint256(c);
-    print_uint256(a);
-    print_uint256(b);
-    mul_uint256(a,b,m);
-    print_uint256(m+16);
-    print_uint256(m);
+    Generate(a);
+    Generate(b);
+    Generate(c);
+    Print(a);
+    Print(b);
+    Mul(a, b, m);
+    Print(m + 16);
+    Print(m);
     printf("\n");
 
-    div_uint256(m,c,a,r);
+    Div(m, c, a, r);
 
-    print_uint256(c);
-    print_uint256(a);
-    print_uint256(r);
+    Print(c);
+    Print(a);
+    Print(r);
 
     printf("\n");
 
 
-
-
-    print_uint256(r);
+    Print(r);
 
     printf("URA\n");
-    generate_uint256(a);
-    generate_uint256(b);
-    generate_uint256(c);
+    Generate(a);
+    Generate(b);
+    Generate(c);
 
-    add_uint256(a,b,c);
-    sub_uint256(c,b,d);
+    Add(a, b, c);
+    Sub(c, b, d);
 
-    print_uint256(a);
-    print_uint256(b);
-    print_uint256(c);
-    print_uint256(d);
+    Print(a);
+    Print(b);
+    Print(c);
+    Print(d);
 
-    printf("%d\n", cmp_uint256(c,d));
+    printf("%d\n", Cmp(c, d));
     return 0;
 }

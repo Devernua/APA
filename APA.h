@@ -20,15 +20,15 @@ typedef uint32_t DWORD;
 #define MAKEWORD(a,b)  ((((uint16_t)(a)) <<  8) + b)
 #define MAKEDWORD(a,b) ((((uint32_t)(a)) << 16) + b)
 
-void generate_uint256(uint256_t digit);
-void print_uint256(const uint256_t digit);
-int cmp_uint256(const uint256_t a, const uint256_t b);
+void Generate(uint256_t digit);
+void Print(const uint256_t digit);
+int Cmp(const uint256_t a, const uint256_t b);
 
 
-uint16_t add_uint256(const uint256_t a, const uint256_t b, uint256_t c);
-uint16_t sub_uint256(const uint256_t a, const uint256_t b, uint256_t c);
+uint16_t Add(const uint256_t a, const uint256_t b, uint256_t c);
+uint16_t Sub(const uint256_t a, const uint256_t b, uint256_t c);
 
-void mul_uint256(const uint256_t a, const uint256_t b, uint512_t c);
-void div_uint256(const uint512_t U, const uint256_t V, uint256_t Q, uint256_t R);
+void Mul(const uint256_t a, const uint256_t b, uint512_t c);
+void Div(const uint512_t U, const uint256_t V, uint256_t Q, uint256_t R);
 
 #endif //APA_APA_H

@@ -9,14 +9,14 @@
 #include <time.h>
 #include <assert.h>
 
-void generate_uint256(uint256_t digit)
+void Generate(uint256_t digit)
 {
   for (size_t i = 0; i < SIZE; i++) {
     digit[i] = (uint16_t) MAKEWORD((rand() % 0xFF), (rand() % 0xFF));
   }
 }
 
-void print_uint256(const uint256_t digit)
+void Print(const uint256_t digit)
 {
   for (size_t i = SIZE; i > 0; i--)
   {
@@ -25,7 +25,7 @@ void print_uint256(const uint256_t digit)
   printf("\n");
 }
 
-int cmp_uint256(const uint256_t a, const uint256_t b)
+int Cmp(const uint256_t a, const uint256_t b)
 {
   for (size_t i = SIZE; i > 0; i--)
   {
@@ -67,7 +67,7 @@ uint16_t _add(uint16_t const * const a, uint16_t const * const b, const size_t s
   return d; //перенос
 }
 
-uint16_t add_uint256(const uint256_t a, const uint256_t b, uint256_t c){
+uint16_t Add(const uint256_t a, const uint256_t b, uint256_t c){
   return _add(a, b, SIZE, c); //перенос
 }
 
@@ -86,7 +86,7 @@ uint16_t _sub(uint16_t const * const a, uint16_t const * const b, const size_t s
   return d;  //перенос
 }
 
-uint16_t sub_uint256(const uint256_t a, const uint256_t b, uint256_t c){
+uint16_t Sub(const uint256_t a, const uint256_t b, uint256_t c){
   return _sub(a, b, SIZE, c); //перенос
 }
 
@@ -128,7 +128,7 @@ void _mult(uint16_t const * const a, const size_t size_a, uint16_t const * const
     }
 }
 
-void mul_uint256(const uint256_t a, const uint256_t b, uint512_t c){
+void Mul(const uint256_t a, const uint256_t b, uint512_t c){
     _mult(a, SIZE, b, SIZE, c, SIZE * 2);
 }
 
@@ -230,6 +230,6 @@ void _div(uint16_t const * const U, uint16_t const * const V, uint16_t* const Q,
     }
 }
 
-void div_uint256(const uint512_t U, const uint256_t V, uint256_t Q, uint256_t R){
+void Div(const uint512_t U, const uint256_t V, uint256_t Q, uint256_t R){
     _div(U, V, Q, R, SIZE*2, SIZE);
 }

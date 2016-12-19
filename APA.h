@@ -31,4 +31,6 @@ uint16_t Sub(const uint256_t a, const uint256_t b, uint256_t c);
 void Mul(const uint256_t a, const uint256_t b, uint512_t c);
 void Div(const uint512_t U, const uint256_t V, uint256_t Q, uint256_t R);
 
+void MulMod(const uint256_t a, const uint256_t b, const uint256_t n, uint256_t c);
+void Pow(const uint256_t a, const uint256_t b, const uint256_t n, uint256_t c);
 #endif //APA_APA_H

@@ -13,9 +13,10 @@ int main() {
     Generate(c);
     Print(a);
     Print(b);
-    Mul(a, b, m);
-    Print(m + 16);
-    Print(m);
+    Print(c);
+    Pow(a, b, c, d);
+    //Print(m + 16);
+    Print(d);
     printf("\n");
 
     Div(m, c, a, r);

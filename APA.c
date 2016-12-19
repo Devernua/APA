@@ -233,3 +233,24 @@ void _div(uint16_t const * const U, uint16_t const * const V, uint16_t* const Q,
 void Div(const uint512_t U, const uint256_t V, uint256_t Q, uint256_t R){
     _div(U, V, Q, R, SIZE*2, SIZE);
 }
+
+void MulMod(const uint256_t a, const uint256_t b, const uint256_t n, uint256_t c) {
+    uint512_t e = {0};
+    Mul(a,b,e);
+    Div(e,n,NULL,c);
+}
+
+void Pow(const uint256_t a, const uint256_t b, const uint256_t n, uint256_t c) {
+    size_t i;
+    c[0] = 1;
+
+    for(i = 1; i < SIZE; i++)
+        c[i] = 0;
+
+    for(i = 16 * SIZE; i > 0; i--)
+    {
+        MulMod(c,c,n,c);
+        if((b[(i-1)/16]>>((i-1)%16))&1)
+            MulMod(c,a,n,c);
+    }
+}

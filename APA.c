@@ -161,9 +161,9 @@ void _div(uint16_t const * const U, uint16_t const * const V, uint16_t* const Q,
     uint16_t d;
 
     if (R != NULL) for (i = 0; i < sizeV; i++) R[i] = 0;
-    if (Q != NULL) for (i = 0; i < sizeU; i++) Q[i] = 0;
+    if (Q != NULL) for (i = 0; i < 16; i++) Q[i] = 0;//16!!!
 
-    for (i = sizeV; (i > 0)&(!V[i - 1]); i--);
+    for (i = sizeV; (i > 0) && (!V[i - 1]); i--);
     sizeV = i;
     assert(sizeV != 0);
 

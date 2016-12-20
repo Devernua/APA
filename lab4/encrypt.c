@@ -6,7 +6,7 @@
 #include "stdint.h"
 #include "stdlib.h"
 #include "stdio.h"
-#include "APA.h"
+#include "../APA.h"
 
 int main(int argc, char *argv[], char *envp[])
 {
@@ -24,10 +24,10 @@ int main(int argc, char *argv[], char *envp[])
     {
         uint256_t M = {0}, b = {0};
         uint8_t s[sizeof(M)] = {0};
-        size_t nread = fread(s, sizeof(uint8_t), 32, fin);
+        size_t nread = fread(s, sizeof(uint8_t), 30, fin);
         if (nread == 0) { break; }
         count++;
-        for (size_t i = 0; i < sizeof(M)/2; i++) {
+        for (size_t i = 0; i < 15; i++) {
             M[i] = (uint16_t) MAKEWORD(s[2*i], s[2*i + 1]);
         }
         RSA_encrypt(M, e, n, b);

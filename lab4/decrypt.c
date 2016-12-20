@@ -3,7 +3,7 @@
 #include "stdlib.h"
 #include "time.h"
 #include "stdio.h"
-#include "APA.h"
+#include "../APA.h"
 
 int main(int argc, char *argv[], char *envp[])
 {
@@ -33,7 +33,7 @@ int main(int argc, char *argv[], char *envp[])
         }
         readed = fread(M, sizeof(uint8_t), 32, fin);
 
-        fwrite(s, sizeof(uint8_t), (readed) ? 32 : strlen(s), fout);
+        fwrite(s, sizeof(uint8_t), (readed) ? 30 : strlen(s), fout);
     }
 
     fclose(fin);

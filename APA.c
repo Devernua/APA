@@ -5,107 +5,92 @@
 #include "APA.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include <time.h>
 #include <assert.h>
 
-void Generate(uint256_t digit)
-{
-  for (size_t i = 0; i < SIZE; i++) {
-    digit[i] = (uint16_t) MAKEWORD((rand() % 0xFF), (rand() % 0xFF));
-  }
-}
-
-void Print(const uint256_t digit)
-{
-  for (size_t i = SIZE; i > 0; i--)
-  {
-    printf("%04x", digit[i - 1]);
-  }
-  printf("\n");
-}
-
-int Cmp(const uint256_t a, const uint256_t b)
-{
-  for (size_t i = SIZE; i > 0; i--)
-  {
-    if (a[i - 1] > b[i - 1])
-    {
-      // a > b
-      return 1;
+void Generate(uint256_t digit) {
+    for (size_t i = 0; i < SIZE; i++) {
+        digit[i] = (uint16_t) MAKEWORD((rand() % 0xFF), (rand() % 0xFF));
     }
-    if (a[i - 1] < b[i - 1])
-    {
-      // b > a
-      return -1;
+}
+
+void Print(const uint256_t digit) {
+    for (size_t i = SIZE; i > 0; i--) {
+        printf("%04x", digit[i - 1]);
     }
-  }
-
-  // a == b
-  return 0;
+    printf("\n");
 }
 
-void _assign(uint16_t * const a, uint16_t const * const b, const size_t size)
-{
-  for (size_t i = 0; i < size; i++) {
-    a[i] = b[i];
-  }
+int Cmp(const uint256_t a, const uint256_t b) {
+    for (size_t i = SIZE; i > 0; i--) {
+        if (a[i - 1] > b[i - 1]) {
+            // a > b
+            return 1;
+        }
+        if (a[i - 1] < b[i - 1]) {
+            // b > a
+            return -1;
+        }
+    }
+
+    // a == b
+    return 0;
 }
 
-uint16_t _add(uint16_t const * const a, uint16_t const * const b, const size_t size, uint16_t * const c)
-{
-  uint16_t d = 0;
-  uint32_t T;
-
-  for (size_t i = 0; i < size; i++)
-  {
-    T = (uint32_t)(a[i]) + (uint32_t)(b[i]) + (uint32_t)(d);
-    c[i] = LOWORD(T);
-    d = HIWORD(T);
-  }
-
-  return d; //перенос
+void _assign(uint16_t *const a, uint16_t const *const b, const size_t size) {
+    for (size_t i = 0; i < size; i++) {
+        a[i] = b[i];
+    }
 }
 
-uint16_t Add(const uint256_t a, const uint256_t b, uint256_t c){
-  return _add(a, b, SIZE, c); //перенос
-}
-
-uint16_t _sub(uint16_t const * const a, uint16_t const * const b, const size_t size, uint16_t * const c)
-{
-  uint16_t d = 0;
-  uint32_t T;
-
-  for (size_t i = 0; i < size; i++)
-  {
-    T = (uint32_t)(a[i]) - (uint32_t)(b[i]) - (uint32_t)(d);
-    c[i] = LOWORD(T);
-    d = (HIWORD(T) == 0) ? 0 : 1;
-  }
-
-  return d;  //перенос
-}
-
-uint16_t Sub(const uint256_t a, const uint256_t b, uint256_t c){
-  return _sub(a, b, SIZE, c); //перенос
-}
-
-uint16_t _mul_word(uint16_t const * const a, const size_t size, const uint16_t b, uint16_t * const c)
-{
+uint16_t _add(uint16_t const *const a, uint16_t const *const b, const size_t size, uint16_t *const c) {
     uint16_t d = 0;
     uint32_t T;
 
-    for (size_t i = 0; i < size; i++)
-    {
-        T = (uint32_t)a[i] * (uint32_t)b + (uint32_t)d;
+    for (size_t i = 0; i < size; i++) {
+        T = (uint32_t) (a[i]) + (uint32_t) (b[i]) + (uint32_t) (d);
+        c[i] = LOWORD(T);
+        d = HIWORD(T);
+    }
+
+    return d; //перенос
+}
+
+uint16_t Add(const uint256_t a, const uint256_t b, uint256_t c) {
+    return _add(a, b, SIZE, c); //перенос
+}
+
+uint16_t _sub(uint16_t const *const a, uint16_t const *const b, const size_t size, uint16_t *const c) {
+    uint16_t d = 0;
+    uint32_t T;
+
+    for (size_t i = 0; i < size; i++) {
+        T = (uint32_t) (a[i]) - (uint32_t) (b[i]) - (uint32_t) (d);
+        c[i] = LOWORD(T);
+        d = (uint16_t) ((HIWORD(T) == 0) ? 0 : 1);
+    }
+
+    return d;  //перенос
+}
+
+uint16_t Sub(const uint256_t a, const uint256_t b, uint256_t c) {
+    return _sub(a, b, SIZE, c); //перенос
+}
+
+uint16_t _mul_word(uint16_t const *const a, const size_t size, const uint16_t b, uint16_t *const c) {
+    uint16_t d = 0;
+    uint32_t T;
+
+    for (size_t i = 0; i < size; i++) {
+        T = (uint32_t) a[i] * (uint32_t) b + (uint32_t) d;
         c[i] = LOWORD(T);
         d = HIWORD(T);
     }
     return d; //перенос
 }
 
-void _mult(uint16_t const * const a, const size_t size_a, uint16_t const * const b, const size_t size_b, uint16_t* const c, const size_t size_c)
-{
+void
+_mult(uint16_t const *const a, const size_t size_a, uint16_t const *const b, const size_t size_b, uint16_t *const c,
+      const size_t size_c) {
     uint16_t d;
     uint32_t T;
 
@@ -115,12 +100,10 @@ void _mult(uint16_t const * const a, const size_t size_a, uint16_t const * const
         c[i] = 0;
     }
 
-    for (size_t i = 0; i < size_a; i++)
-    {
+    for (size_t i = 0; i < size_a; i++) {
         d = 0;
-        for (size_t j = 0; j < size_b; j++)
-        {
-            T = (uint32_t)c[i + j] + (uint32_t)a[i] * (uint32_t)b[j] + (uint32_t)d;
+        for (size_t j = 0; j < size_b; j++) {
+            T = (uint32_t) c[i + j] + (uint32_t) a[i] * (uint32_t) b[j] + (uint32_t) d;
             c[i + j] = LOWORD(T);
             d = HIWORD(T);
         }
@@ -128,12 +111,11 @@ void _mult(uint16_t const * const a, const size_t size_a, uint16_t const * const
     }
 }
 
-void Mul(const uint256_t a, const uint256_t b, uint512_t c){
+void Mul(const uint256_t a, const uint256_t b, uint512_t c) {
     _mult(a, SIZE, b, SIZE, c, SIZE * 2);
 }
 
-void _div_word(uint16_t const * const a, const size_t size, const uint16_t b, uint16_t* const c, uint16_t* const r)
-{
+void _div_word(uint16_t const *const a, const size_t size, const uint16_t b, uint16_t *const c, uint16_t *const r) {
     uint32_t T = 0;
 
     assert(b != 0); //деление на ноль
@@ -150,12 +132,12 @@ void _div_word(uint16_t const * const a, const size_t size, const uint16_t b, ui
     }
 }
 
-void _div(uint16_t const * const U, uint16_t const * const V, uint16_t* const Q, uint16_t* const R, size_t sizeU, size_t sizeV)
-{
+void _div(uint16_t const *const U, uint16_t const *const V, uint16_t *const Q, uint16_t *const R, size_t sizeU,
+          size_t sizeV) {
     uint16_t q, buf1, buf2;
     uint16_t U2[sizeU + 1],
-             V2[sizeV + 1],
-             R2[sizeV + 1];
+            V2[sizeV + 1],
+            R2[sizeV + 1];
     uint32_t inter;
     size_t i, j, k;
     uint16_t d;
@@ -167,29 +149,24 @@ void _div(uint16_t const * const U, uint16_t const * const V, uint16_t* const Q,
     sizeV = i;
     assert(sizeV != 0);
 
-    for (k = sizeU; (k > 0)&(!U[k - 1]); k--);
+    for (k = sizeU; (k > 0) & (!U[k - 1]); k--);
     sizeU = k;
 
-    if (sizeV > sizeU)
-    {
+    if (sizeV > sizeU) {
         if (R != NULL) _assign(R, U, sizeU);
         return;
     }
-    if (sizeV == 1)
-    {
+    if (sizeV == 1) {
         _div_word(U, sizeU, V[0], Q, R);
         return;
     }
 
 
-    d = (uint16_t)(((uint32_t)UINT16_MAX + 1) / ((uint32_t)V[sizeV - 1] + 1));
-    if (d != 1)
-    {
+    d = (uint16_t) (((uint32_t) UINT16_MAX + 1) / ((uint32_t) V[sizeV - 1] + 1));
+    if (d != 1) {
         V2[sizeV] = _mul_word(V, sizeV, d, V2);
         U2[sizeU] = _mul_word(U, sizeU, d, U2);
-    }
-    else
-    {
+    } else {
         _assign(V2, V, sizeV);
         V2[sizeV] = 0;
         _assign(U2, U, sizeU);
@@ -197,26 +174,23 @@ void _div(uint16_t const * const U, uint16_t const * const V, uint16_t* const Q,
     }
 
 
-    for (j = sizeU; j >= sizeV; j--)
-    {
+    for (j = sizeU; j >= sizeV; j--) {
         inter = MAKEDWORD(U2[j], U2[j - 1]);
         if (U2[j] == V2[sizeV - 1])
             q = UINT16_MAX;
         else {
-            q = (uint16_t)(inter / V2[sizeV - 1]);
+            q = (uint16_t) (inter / V2[sizeV - 1]);
 
-            if (((uint32_t)V2[sizeV - 2] * q) > (MAKEDWORD((uint16_t)(inter%V2[sizeV - 1]), U2[j - 2])))
-            {
+            if (((uint32_t) V2[sizeV - 2] * q) > (MAKEDWORD((uint16_t) (inter % V2[sizeV - 1]), U2[j - 2]))) {
                 q--;
             }
         }
 
         buf1 = _mul_word(V2, sizeV, q, R2);
         buf2 = _sub(U2 + j - sizeV, R2, sizeV, U2 + j - sizeV);
-        inter = (uint32_t)U2[j] - buf1 - buf2;
+        inter = (uint32_t) U2[j] - buf1 - buf2;
 
-        if (HIWORD(inter))
-        {
+        if (HIWORD(inter)) {
             _add(U2 + j - sizeV, V2, sizeV, U2 + j - sizeV);
             q--;
         }
@@ -224,42 +198,39 @@ void _div(uint16_t const * const U, uint16_t const * const V, uint16_t* const Q,
             Q[j - sizeV] = q;
     }
 
-    if (R != NULL)
-    {
+    if (R != NULL) {
         _div_word(U2, sizeV, d, R, NULL);
     }
 }
 
-void Div(const uint512_t U, const uint256_t V, uint256_t Q, uint256_t R){
+void Div(const uint512_t U, const uint256_t V, uint256_t Q, uint256_t R) {
     _div(U, V, Q, R, SIZE * 2, SIZE);
 }
 
 void MulMod(const uint256_t a, const uint256_t b, const uint256_t n, uint256_t c) {
     uint512_t e = {0};
-    Mul(a,b,e);
-    Div(e,n,NULL,c);
+    Mul(a, b, e);
+    Div(e, n, NULL, c);
 }
 
 void Pow(const uint256_t a, const uint256_t b, const uint256_t n, uint256_t c) {
     size_t i;
     c[0] = 1;
 
-    for(i = 1; i < SIZE; i++)
+    for (i = 1; i < SIZE; i++)
         c[i] = 0;
 
-    for(i = 16 * SIZE; i > 0; i--)
-    {
-        MulMod(c,c,n,c);
-        if((b[(i-1)/16]>>((i-1)%16))&1)
-            MulMod(c,a,n,c);
+    for (i = 16 * SIZE; i > 0; i--) {
+        MulMod(c, c, n, c);
+        if ((b[(i - 1) / 16] >> ((i - 1) % 16)) & 1)
+            MulMod(c, a, n, c);
     }
 }
 
-void RSA_encrypt(const uint256_t M, const uint256_t e, const uint256_t n, uint256_t C)
-{
+void RSA_encrypt(const uint256_t M, const uint256_t e, const uint256_t n, uint256_t C) {
     Pow(M, e, n, C);
 }
-void RSA_decrypt(const uint256_t C, const uint256_t d, const uint256_t n, uint256_t M)
-{
+
+void RSA_decrypt(const uint256_t C, const uint256_t d, const uint256_t n, uint256_t M) {
     Pow(C, d, n, M);
 }

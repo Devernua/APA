@@ -13,18 +13,22 @@ int main()
     uint256_t d = { 0x1545, 0xdeb8, 0xc548, 0x72c6, 0x2180, 0x2f06, 0xa69b, 0xd15e, 0x5b4f, 0x2da8, 0xee7c, 0x740b, 0x07bf, 0x2bf2, 0x794b, 0x279d };
     uint256_t n = { 0x6d13, 0xffcb, 0xd640, 0xba83, 0x1158, 0x9c72, 0xdae5, 0x1b7b, 0x4387, 0x3d6d, 0x8a17, 0x678f, 0x0aa3, 0x74cd, 0x128b, 0xd9ae };
 
-    srand(time(NULL));
+    srand((unsigned int) time(NULL));
 
-    uint256_t dig, res1, res2;
+    uint256_t dig = {0}, tmp = {0};
+    uint256_t res1 = {0}, res2 = {0};
+
     Generate(dig);
+
     Pow(dig,  e, n, res1);
     Pow(res1, d, n, res2);
+    Div(dig, n, NULL, tmp);
 
     Print(dig);
     Print(res1);
     Print(res2);
 
-    printf("result of compare: %d\n", Cmp(dig, res2));
+    printf("result of compare: %d\n", Cmp(tmp, res2));
 
 
 

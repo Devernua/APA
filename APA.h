@@ -12,8 +12,8 @@
 typedef uint16_t uint256_t[SIZE];
 typedef uint16_t uint512_t[SIZE * 2];
 
-typedef uint16_t WORD;
-typedef uint32_t DWORD;
+//typedef uint16_t WORD;
+//typedef uint32_t DWORD;
 
 #define LOWORD(T) ((uint16_t) (T)     )
 #define HIWORD(T) ((uint16_t) (T>>16) )
